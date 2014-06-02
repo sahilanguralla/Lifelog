@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="application-name" content="Lifelog">
+  <meta name="description" content="Lifelog is a javascript based blog to store your daily life routines locally. No content is stored in servers everything is on your computer.">
+  <meta name="author" content="TBT">
+  <meta name="keywords" content="blog,private, javascript, local, my life, personal diary">
+  
+  <title>My Daily Life</title>
+  
+  <link rel="stylesheet" href="css/metro-bootstrap.css">
+  <link rel="stylesheet" href="css/metro-bootstrap-responsive.css">
+  <link href="js/prettify/prettify.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet">
+
+  <script src="js/json2.js"></script>
+  <script src="js/jquery/jquery.min.js"></script>
+  <script src="js/jquery/jquery.widget.min.js"></script>
+  <script src="js/metro/metro.min.js"></script>
+  <script src="js/jstorage.js"></script>
+  <script src="js/custom/storage.js"></script>
+
+</head>
+<body class="metro">
+  <nav class="navigation-bar light">
+    <nav class="navigation-bar-content">
+      <div class="element">
+        <a href=".">My Daily Life</a>
+      </div>
+     
+      <div class="element place-right">
+        <a href="#contact">
+          <span class="icon-phone"></span> Contact Us
+        </a>
+      </div>
+      <div class="element place-right">
+        <a href="#about">
+          <span class="icon-accessibility"></span> About Us
+        </a>
+      </div>
+      <span class="element-divider place-right"></span>
+      <div class="element place-right" id="newPost">
+        <a href="#post">
+          <span class="icon-flag-2"></span> New Post
+        </a>
+      </div>
+      <span class="element-divider place-right"></span>
+      <div class="element place-right">
+        <a href=".">
+          <span class="icon-home"></span> Home
+        </a>
+      </div>
+      <span class="element-divider"></span>
+      <div class="element input-element">
+        <form>
+          <div class="input-control text">
+            <input type="text" placeholder="Search Post...">
+            <button class="btn-search"></button>
+          </div>
+        </form>
+      </div>
+    </nav>
+  </nav>
+
+  <div class="grid">
+    <div class="row margin-top0">
+      <div class="header">
+        <div class="padding20" style="padding-top:80px">
+          <h1 class="fg-white">My Daily Life</h1>
+          <h1 class="subheader fg-white">Share without fear because everything is here...</h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="posts">
+			<div class="span12 padding20">
+			<div class="listview-outlook" data-role="listview" style="margin-top: 20px">
+				<div class="list-group">
+						<a href="" class="group-title">Today</a>
+						<div style="display: block;" class="group-content">
+								<a class="list marked active" href="#">
+										<div class="list-content">
+												<span class="list-title">subscribe@metroui.net</span>
+												<span class="list-subtitle">MetroUI: News on 26/10/2013</span>
+												<span class="list-remark">Hello friend! Newest for Metro UI CSS</span>
+										</div>
+								</a>
+								<a class="list" href="#">
+										<div class="list-content">
+												<span class="list-title">subscribe@metroui.net</span>
+												<span class="list-subtitle">MetroUI: News on 26/10/2013</span>
+												<span class="list-remark">Hello friend! Newest for Metro UI CSS</span>
+										</div>
+								</a>
+								<a class="list" href="#">
+										<div class="list-content">
+												<span class="list-title">subscribe@metroui.net</span>
+												<span class="list-subtitle">MetroUI: News on 26/10/2013</span>
+												<span class="list-remark">Hello friend! Newest for Metro UI CSS</span>
+										</div>
+								</a>
+								<a class="list" href="#">
+										<div class="list-content">
+												<span class="list-title">subscribe@metroui.net</span>
+												<span class="list-subtitle">MetroUI: News on 26/10/2013</span>
+												<span class="list-remark">Hello friend! Newest for Metro UI CSS</span>
+										</div>
+								</a>
+						</div>
+				</div>
+
+				<div class="list-group collapsed">
+						<a href="" class="group-title">Yesterday</a>
+						<div style="display: none;" class="group-content">
+								<a class="list" href="#">
+										<div class="list-content">
+												<span class="list-title"><span class="place-right icon-flag-2 fg-red smaller"></span>subscribe@metroui.net</span>
+												<span class="list-subtitle"><span class="place-right">1:51</span>MetroUI: News on 26/10/2013</span>
+												<span class="list-remark">Hello friend! Newest for Metro UI CSS</span>
+										</div>
+								</a>
+								<a class="list" href="#">
+										<div class="list-content">
+												<span class="list-title"><span class="place-right icon-flag-2 fg-green smaller"></span>subscribe@metroui.net</span>
+												<span class="list-subtitle"><span class="place-right">1:51</span>MetroUI: News on 26/10/2013</span>
+												<span class="list-remark">Hello friend! Newest for Metro UI CSS</span>
+										</div>
+								</a>
+								<a class="list" href="#">
+										<div class="list-content">
+												<span class="list-title">subscribe@metroui.net</span>
+												<span class="list-subtitle"><span class="place-right">1:51</span>MetroUI: News on 26/10/2013</span>
+												<span class="list-remark">Hello friend! Newest for Metro UI CSS</span>
+										</div>
+								</a>
+						</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+  <div class="footer">
+    &copy; TBT 2014 | Powered by <a href="http://fb.com/portoftbt">TBT</a>
+  </div>
+
+  <!-- Javascript -->
+  <script type="text/javascript">
+      $("#newPost").on('click', newPostBox);
+  </script>
+</body>
+</html>

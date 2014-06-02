@@ -1,0 +1,178 @@
+html{
+    height:100% !important;
+}
+body{
+    min-height:100% !important;
+}
+.header {
+    min-height: 250px;
+    background:url(../img/b1.jpg);
+    background-size:cover;
+}
+.footer {
+    padding:20px;
+    background-color:#000000;
+    color:#FFFFFF;
+    position:relative;
+    bottom: 0px;
+    width:100%;
+}
+.line {
+    clear:both;
+    width:100%;
+}
+.post {
+    width:100% !important;
+    background-color:#EEEEEE;
+}
+.post-alt {
+    background-color:#000000;
+}
+.post-alt h1 {
+    color:#FFFFFF !important;
+}
+.post-alt.post-content {
+    color:#FFFFFF !important;
+}
+.box {
+    padding-left:20px;
+    padding-right: 20px;
+}
+.margin-bottom0{
+    margin-bottom: 0px !important;
+}
+.margin-top0{
+    margin-top: 0px !important;
+}
+/*@media(max-width: 767px){
+	.small-1{
+		width:6.25%;
+		display: inline;
+	}
+	.small-2{
+		width:12.5%;
+		display: inline;
+	}
+	.small-3{
+		width:18.75%;
+		display: inline;
+	}
+	.small-4{
+		width:25%;
+		display: inline;
+	}
+	.small-5{
+		width:31.25%;
+		display: inline;
+	}
+	.small-6{
+		width:37.5%;
+		display: inline;
+	}
+	.small-7{
+		width:43.75%;
+		display: inline;
+	}
+	.small-8{
+		width:50%;
+		display: inline;
+	}
+	.small-9{
+		width:56.25%;
+		display: inline;
+	}
+	.small-10{
+		width:62.5%;
+		display: inline;
+	}
+	.small-11{
+		width:68.75%;
+		display: inline;
+	}
+	.small-12{
+		width:75%;
+		display: inline;
+	}
+	.small-13{
+		width:81.25%;
+		display: inline;
+	}
+	.small-14{
+		width:87.5%;
+		display: inline;
+	}
+	.small-15{
+		width:93.75%;
+		display: inline;
+	}
+	.small-16{
+		width:100%;
+		display: inline;
+	}
+}
+@media(min-width: 768px){
+	.large-1{
+		width:6.25%;
+		display: inline;
+	}
+	.large-2{
+		width:12.5%;
+		display: inline;
+	}
+	.large-3{
+		width:18.75%;
+		display: inline;
+	}
+	.large-4{
+		width:25%;
+		display: inline;
+	}
+	.large-5{
+		width:31.25%;
+		display: inline;
+	}
+	.large-6{
+		width:37.5%;
+		display: inline;
+	}
+	.large-7{
+		width:43.75%;
+		display: inline;
+	}
+	.large-8{
+		width:50%;
+		display: inline;
+	}
+	.large-9{
+		width:56.25%;
+		display: inline;
+	}
+	.large-10{
+		width:62.5%;
+		display: inline;
+	}
+	.large-11{
+		width:68.75%;
+		display: inline;
+	}
+	.large-12{
+		max-width:75%;
+		display: inline;
+	}
+	.large-13{
+		width:81.25%;
+		display: inline;
+	}
+	.large-14{
+		width:87.5%;
+		display: inline;
+	}
+	.large-15{
+		width:93.75%;
+		display: inline;
+	}
+	.large-16{
+		width:100%;
+		display: inline;
+	}
+}*/
