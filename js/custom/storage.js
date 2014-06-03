@@ -28,7 +28,8 @@ function validate(form) {
 function submitPost(form) {
     if (validate(form)) {
         var count = $.jStorage.index().length;
-        $.jStorage.set("post" + count, form["postDate"].value + ";;" + form["postTitle"].value + ";;" + form["postContent"].value);
+        var now = new Date();
+        $.jStorage.set("post" + count, now.getTime() + ";;" + form["postTitle"].value + ";;" + form["postContent"].value);
         notify("Post has been succesfully added!", "Success", 5000, true, "green", "white");
     }
     return false;
@@ -118,14 +119,42 @@ window.onload = function() {
     var posts = new Array();
     for (i = 1; i < index.length; i++) {
         var postDetails = $.jStorage.get(index[i]).split(";;");
-        posts[i - 1] = new post(new Date(postDetails[0]), postDetails[1], postDetails[2]);
+
+        posts[i - 1] = new post(new Date(parseInt(postDetails[0])), postDetails[1], postDetails[2]);
     }
 
     posts.sort(function(post1, post2) {
         return post2.date - post1.date;
     });
-
-    for (i = 0; i < posts.length; i++) {
-        document.getElementById("posts").innerHTML += '<div class="row padding10">\n      <div class="span12" style="background-color:#EEEEEE;padding-left:20px">\n        <div class="row">\n          <div class="span8">\n            <h3>' + posts[i].title + '</h3>\n          </div>\n          <div class="span3 text-right">\n            <h4>' + posts[i].date.getDate() + '/' + posts[i].date.getMonth() + '/' + posts[i].date.getFullYear() + '</h4>\n          </div>\n        </div>\n        <div class="row">\n          <p>' + posts[i].content + '</p>\n        </div>\n      </div>\n    </div>';
+    
+    var today=new Date();
+    var yesterday=new Date(today.getTime()-86400000);
+    var time=new Date(0);
+    var init=0;
+    var content;
+    
+    if(posts.length>0)
+    {
+        content = '<div class="listview-outlook" data-role="listview">';
+        for (i = 0; i < posts.length; i++) {
+            if(time.toDateString() != posts[i].date.toDateString()){
+                var title;
+                if(posts[i].date.toDateString() == today.toDateString())
+                    title = "Today";
+                else if(posts[i].date.toDateString() == yesterday.toDateString())
+                    title = "Yesterday";
+                else
+                    title = posts[i].date.toDateString();
+                content += (init?'</div></div>':'')+'<div class="list-group"><a href="" class="group-title">'+title+'</a><div class="group-content">';
+                time=posts[i].date;
+            }
+            content += '<a class="list" href="#"><div class="list-content"><span class="list-title">' + posts[i].title + '</span><span class="list-subtitle">' + posts[i].date.getDate() + '/' + (posts[i].date.getMonth()+1) + '/' + posts[i].date.getFullYear() + '</span><span class="list-remark">' + posts[i].content + '</span></div></a>';
+        }
+        content += '</div></div></div>';
     }
-}
+    else
+        content = '<div class="row"><div class="padding20 bg-darkBlue fg-white">Oops! Your diary seems to be empty. Please fill in some of your life!</div></div>';
+    
+    document.getElementById("posts").innerHTML=content;
+    $.Metro.initAll();
+};
