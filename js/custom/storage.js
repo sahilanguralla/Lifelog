@@ -1,27 +1,89 @@
-function post(postDate, postTitle, postContent) {
+function post(postDate, postTitle, postSummary, postContent) {
     this.date = postDate;
     this.title = postTitle;
+    this.summary = postSummary;
     this.content = postContent;
 }
 
+post.prototype.toHTML=function(){
+    return '<a class="list" href="#"><div class="list-content"><span class="list-title">' + this.title + '</span><span class="list-subtitle"><span class="place-right">'+this.date.getHours()+':'+this.date.getMinutes()+'</span>' + this.date.getDate() + '/' + (this.date.getMonth()+1) + '/' + this.date.getFullYear() + '</span><span class="list-remark">' + this.summary + '</span></div></a>';
+}
+
+post.prototype.searchText=function(text){
+    if(this.title.indexOf(text)!=-1 || this.summary.indexOf(text)!=-1 || this.content.indexOf(text)!=-1)
+        return true;
+    return false;
+}
+
+post.sortPosts=function(post1,post2){
+    return post2.date-post1.date;
+}
+
+post.displayPosts=function(num,searchText){
+    document.getElementById("posts").innerHTML=post.getPosts(num,searchText);
+    $.Metro.initAll();
+};
+
+post.getPosts=function(num,searchText){
+    var index = $.jStorage.index();
+    if(num == undefined)
+        num = index.length-1;
+    var posts = new Array();
+    for (i = 1,j = 0; i <= num; i++) {
+        var postDetails = $.jStorage.get(index[i]).split(";;");
+        posts[j] = new post(new Date(parseInt(postDetails[0])), postDetails[1], postDetails[2], postDetails[3]);
+        if(searchText == undefined)
+            j++;
+        else if(posts[j].searchText(searchText))
+            j++;
+        else
+            posts.splice(j,1);
+    }
+
+    posts.sort(post.sortPosts);
+    
+    var today=new Date();
+    var yesterday=new Date(today.getTime()-86400000);
+    var time=new Date(0);
+    var init=0;
+    var content;
+    
+    if(posts.length>0)
+    {
+        content = '<div class="listview-outlook" data-role="listview">';
+        for (i = 0; i < posts.length; i++) {
+            if(time.toDateString() != posts[i].date.toDateString()){
+                var title;
+                if(posts[i].date.toDateString() == today.toDateString())
+                    title = "Today";
+                else if(posts[i].date.toDateString() == yesterday.toDateString())
+                    title = "Yesterday";
+                else
+                    title = posts[i].date.toDateString();
+                content += (init?'</div></div>':'')+'<div class="list-group"><a href="" class="group-title">'+title+'</a><div class="group-content">';
+                time=posts[i].date;
+            }
+            content += posts[i].toHTML();
+        }
+        content += '</div></div></div>';
+    }
+    else
+        content = '<div class="row"><div class="padding20 bg-darkBlue fg-white">Oops! Your diary seems to be empty. Please fill in some of your life!</div></div>';
+    
+    return content;
+};
+
 function validate(form) {
-    if (form['postTitle'].value.length == 0 || form['postDate'].value.length == 0 || form['postContent'].value.length == 0) {
+    if (form['postTitle'].value.length == 0 || form['postSummary'].value.length == 0 || form['postContent'].value.length == 0) {
         notify("Please fill in all the fields!", "Incomplete Post", "4000", true, "red", "white");
         return false;
     }
     titleVal = /^\w+[ \.\-\w]*\w+$/;
-    dateVal = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
     var count = 0;
     if (!titleVal.test(form["postTitle"].value)) {
         notify("Allowed characters are space, '.', '-' and alphanumeric!", "Invalid Title", 5000, true, "red", "white");
-        count++;
-    }
-    if (!dateVal.test(form["postDate"].value)) {
-        notify("Valid Format of date is MM/DD/YYYY!", "Invalid Date", "6000", true, "red", "white");
-        count++;
-    }
-    if (count != 0)
         return false;
+    }
     return true;
 }
 
@@ -29,8 +91,10 @@ function submitPost(form) {
     if (validate(form)) {
         var count = $.jStorage.index().length;
         var now = new Date();
-        $.jStorage.set("post" + count, now.getTime() + ";;" + form["postTitle"].value + ";;" + form["postContent"].value);
+        $.jStorage.set("post" + count, now.getTime() + ";;" + form["postTitle"].value + ";;" + form["postSummary"].value + ";;" + form["postContent"].value);
         notify("Post has been succesfully added!", "Success", 5000, true, "green", "white");
+        $.Dialog.close();
+        post.displayPosts();
     }
     return false;
 }
@@ -80,8 +144,8 @@ var newPostBox = function() {
             var content = '<form class="user-input" id="postForm" onsubmit="submitPost(this);return false;">' +
                 '<label>Post Title</label>' +
                 '<div class="input-control text"><input type="text" name="postTitle" placeHolder="a suitable title..."><button class="btn-clear"></button></div>' +
-                '<label>Date</label>' +
-                '<div class="input-control text"><input type="text" name="postDate" placeholder="MM/DD/YYYY"><button class="btn-clear"></button></div>' +
+                '<label>Summary</label>' +
+                '<div class="input-control text"><input type="text" name="postSummary" placeholder="brief it..."><button class="btn-clear"></button></div>' +
                 '<label>Description</label>' +
                 '<div class="input-control textarea"><textarea name="postContent" placeholder="describe it..."></textarea></div>' +
                 '<div class="form-actions">' +
@@ -115,46 +179,10 @@ window.onload = function() {
     } else {
         notify("Welcome back <b>" + $.jStorage.get("user") + "</b>", "", 3000, true, "green", "white");
     }
-    var index = $.jStorage.index();
-    var posts = new Array();
-    for (i = 1; i < index.length; i++) {
-        var postDetails = $.jStorage.get(index[i]).split(";;");
-
-        posts[i - 1] = new post(new Date(parseInt(postDetails[0])), postDetails[1], postDetails[2]);
-    }
-
-    posts.sort(function(post1, post2) {
-        return post2.date - post1.date;
-    });
     
-    var today=new Date();
-    var yesterday=new Date(today.getTime()-86400000);
-    var time=new Date(0);
-    var init=0;
-    var content;
+    post.displayPosts();
     
-    if(posts.length>0)
-    {
-        content = '<div class="listview-outlook" data-role="listview">';
-        for (i = 0; i < posts.length; i++) {
-            if(time.toDateString() != posts[i].date.toDateString()){
-                var title;
-                if(posts[i].date.toDateString() == today.toDateString())
-                    title = "Today";
-                else if(posts[i].date.toDateString() == yesterday.toDateString())
-                    title = "Yesterday";
-                else
-                    title = posts[i].date.toDateString();
-                content += (init?'</div></div>':'')+'<div class="list-group"><a href="" class="group-title">'+title+'</a><div class="group-content">';
-                time=posts[i].date;
-            }
-            content += '<a class="list" href="#"><div class="list-content"><span class="list-title">' + posts[i].title + '</span><span class="list-subtitle">' + posts[i].date.getDate() + '/' + (posts[i].date.getMonth()+1) + '/' + posts[i].date.getFullYear() + '</span><span class="list-remark">' + posts[i].content + '</span></div></a>';
-        }
-        content += '</div></div></div>';
-    }
-    else
-        content = '<div class="row"><div class="padding20 bg-darkBlue fg-white">Oops! Your diary seems to be empty. Please fill in some of your life!</div></div>';
-    
-    document.getElementById("posts").innerHTML=content;
-    $.Metro.initAll();
+    document.getElementById("search").onkeyup=function(){
+        post.displayPosts(undefined,this.value);
+    };
 };
