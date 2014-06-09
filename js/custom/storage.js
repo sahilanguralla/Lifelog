@@ -1,4 +1,5 @@
-function post(postDate, postTitle, postSummary, postContent) {
+function post(postIndex, postDate, postTitle, postSummary, postContent) {
+    this.index = postIndex;
     this.date = postDate;
     this.title = postTitle;
     this.summary = postSummary;
@@ -6,7 +7,7 @@ function post(postDate, postTitle, postSummary, postContent) {
 }
 
 post.prototype.toHTML=function(){
-    return '<a class="list" href="#"><div class="list-content"><span class="list-title">' + this.title + '</span><span class="list-subtitle"><span class="place-right">'+this.date.getHours()+':'+this.date.getMinutes()+'</span>' + this.date.getDate() + '/' + (this.date.getMonth()+1) + '/' + this.date.getFullYear() + '</span><span class="list-remark">' + this.summary + '</span></div></a>';
+    return '<a class="list" href="#"><div class="list-content"><span class="list-title" name="post" id="'+this.index+'">' + this.title + '</span><span class="list-subtitle"><span class="place-right">'+this.date.getHours()+':'+this.date.getMinutes()+'</span>' + this.date.getDate() + '/' + (this.date.getMonth()+1) + '/' + this.date.getFullYear() + '</span><span class="list-remark">' + this.summary + '</span></div></a>';
 }
 
 post.prototype.searchText=function(text){
@@ -22,6 +23,12 @@ post.sortPosts=function(post1,post2){
 post.displayPosts=function(num,searchText){
     document.getElementById("posts").innerHTML=post.getPosts(num,searchText);
     $.Metro.initAll();
+    for(var i=0;document.getElementsByName("post")[i]!=undefined;i++){
+        document.getElementsByName("post")[i].onclick=function(){
+            this.style.cursor="pointer";
+            openPost(this.id);
+        }
+    }
 };
 
 post.getPosts=function(num,searchText){
@@ -31,7 +38,7 @@ post.getPosts=function(num,searchText){
     var posts = new Array();
     for (i = 1,j = 0; i <= num; i++) {
         var postDetails = $.jStorage.get(index[i]).split(";;");
-        posts[j] = new post(new Date(parseInt(postDetails[0])), postDetails[1], postDetails[2], postDetails[3]);
+        posts[j] = new post(index[i],new Date(parseInt(postDetails[0])), postDetails[1], postDetails[2], postDetails[3]);
         if(searchText == undefined)
             j++;
         else if(posts[j].searchText(searchText))
@@ -61,6 +68,7 @@ post.getPosts=function(num,searchText){
                 else
                     title = posts[i].date.toDateString();
                 content += (init?'</div></div>':'')+'<div class="list-group"><a href="" class="group-title">'+title+'</a><div class="group-content">';
+                init++;
                 time=posts[i].date;
             }
             content += posts[i].toHTML();
@@ -154,6 +162,31 @@ var newPostBox = function() {
                 '</div>' +
                 '</form>';
             $.Dialog.title("New Post");
+            $.Dialog.content(content);
+            $.Metro.initInputs();
+        }
+    });
+}
+
+var openPost = function(index) {
+    var postDetails=$.jStorage.get(index).split(";;");
+    var date=new Date(parseInt(postDetails[0]));
+    $.Dialog({
+        overlay: true,
+        shadow: true,
+        flat: true,
+        draggable: false,
+        icon: '<span class="icon-newspaper"></span>',
+        title: 'Post View',
+        content: '',
+        width: 500,
+        padding: 10,
+        onShow: function(_dialog) {
+            var content = '<h3>'+postDetails[1]+'</h3>' +
+                '<small>Posted on '+date.toGMTString()+'</small>'+
+                '<hr/>' +
+                '<div>'+postDetails[3]+'</div>';
+        
             $.Dialog.content(content);
         }
     });
