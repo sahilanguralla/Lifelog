@@ -11,7 +11,8 @@ post.prototype.toHTML = function() {
 }
 
 post.prototype.searchText = function(text) {
-    if (this.title.toLowerCase().indexOf(text) != -1 || this.summary.toLowerCase().indexOf(text) != -1 || this.content.toLowerCase().indexOf(text) != -1)
+    text = new RegExp(text,"i");
+    if (text.test(this.title) || text.test(this.summary) || text.test(this.content))
         return true;
     return false;
 }
