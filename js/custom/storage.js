@@ -4,22 +4,22 @@ function post(postIndex, postDate, postTitle, postSummary, postContent) {
     this.title = postTitle;
     this.summary = postSummary;
     this.content = postContent;
-}
+};
 
 post.prototype.toHTML = function() {
     return '<a class="list" href="#"><div class="list-content"><span class="list-title" name="post" id="' + this.index + '">' + this.title + '</span><span class="list-subtitle"><span class="place-right">' + this.date.getHours() + ':' + this.date.getMinutes() + '</span>' + this.date.getDate() + '/' + (this.date.getMonth() + 1) + '/' + this.date.getFullYear() + '</span><span class="list-remark">' + this.summary + '</span></div></a>';
-}
+};
 
 post.prototype.searchText = function(text) {
     text = new RegExp(text,"i");
     if (text.test(this.title) || text.test(this.summary) || text.test(this.content))
         return true;
     return false;
-}
+};
 
 post.sortPosts = function(post1, post2) {
     return post2.date - post1.date;
-}
+};
 
 post.displayPosts = function(num, searchText) {
     document.getElementById("posts").innerHTML = post.getPosts(num, searchText);
@@ -101,6 +101,7 @@ var getKey = function() {
                 return pass;
             }
         }
+        return setKey();
     }
     return false;
 };
@@ -124,10 +125,6 @@ post.setPassword = function() {
     if ($.jStorage.get("pass") == "yes") {
         //getting password
         var password = getKey();
-        //if password not entered asking user for password
-        if (!password) {
-            var password = setKey();
-        }
     } else {
         $.jStorage.set("pass", "yes");
         var password = setKey();
@@ -141,16 +138,12 @@ post.setPassword = function() {
         //decrypting (if needed) and encrypting posts
         $.jStorage.set(index[i], (password ? Aes.Ctr.decrypt(content, password, 256) : content));
     }
-}
+};
 
 post.encrypt = function(post, password) {
     if ($.jStorage.get("pass") == "yes") {
-        if(password == undefined){
+        if(password == undefined)
             var password = getKey();
-            if (!password) {
-                password = setKey();
-            }
-        }
         var post = Aes.Ctr.encrypt(post, password, 256);
         return post;
     }
@@ -159,12 +152,8 @@ post.encrypt = function(post, password) {
 
 post.decrypt = function(post, password) {
     if ($.jStorage.get("pass") == "yes") {
-        if(password == undefined){
+        if(password == undefined)
             var password = getKey();
-            if (!password) {
-                password=setKey();
-            }
-        }
         post = Aes.Ctr.decrypt(post, password, 256);
         return post;
     }
@@ -183,7 +172,7 @@ function validate(form) {
         return false;
     }
     return true;
-}
+};
 
 function submitPost(form) {
     if (validate(form)) {
@@ -199,7 +188,7 @@ function submitPost(form) {
         post.displayPosts();
     }
     return false;
-}
+};
 
 var notify = function(note, cptn, tout, shdw, bg, fg, ht, wd) {
     if (tout == undefined || tout == 0)
@@ -229,7 +218,7 @@ var notify = function(note, cptn, tout, shdw, bg, fg, ht, wd) {
         width: wd,
         timeout: tout
     });
-}
+};
 
 var newPostBox = function() {
     $.Dialog({
@@ -260,14 +249,12 @@ var newPostBox = function() {
             $.Metro.initInputs();
         }
     });
-}
+};
 
 var openPost = function(index) {
     var postDetails = $.jStorage.get(index);
     if($.jStorage.get("pass") == "yes"){
         var pass = getKey();
-        if(!pass)
-            pass = setKey();
         var postDetails = Aes.Ctr.decrypt(postDetails, pass, 256);
     }
     postDetails = postDetails.split(";;");
@@ -291,7 +278,7 @@ var openPost = function(index) {
             $.Dialog.content(content);
         }
     });
-}
+};
 
 window.onload = function() {
     /*Checking Storage/
@@ -346,8 +333,6 @@ window.onload = function() {
         var name = $.jStorage.get("user");
         if($.jStorage.get("pass") == "yes"){
             var pass = getKey();
-            if(!pass)
-                pass = setKey();
             name = Aes.Ctr.decrypt(name, pass, 256);
         } 
         notify("Welcome back <b>" + name + "</b>", "", 3000, true, "green", "white");
